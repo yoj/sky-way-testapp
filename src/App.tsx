@@ -1,24 +1,27 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Peer from 'skyway-js';
+import VideoComp from './components/videoComp';
+import PeerComp from './components/peerComp';
+
+type Stream = {
+  localStream: MediaStream;
+}
+
+const peer = new Peer({
+  key: 'acbe9e88-dfd6-495a-8ab3-8aae221fe08e',
+  debug: 3
+});
 
 function App() {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      video
+      <VideoComp peer={peer}/>
+      peerID
+      <PeerComp peer={peer} />
     </div>
   );
 }
