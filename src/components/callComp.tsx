@@ -7,14 +7,10 @@ type Props = {
   peer: Peer
 }
 
-/*
-const peer = new Peer({
-  key: 'acbe9e88-dfd6-495a-8ab3-8aae221fe08e',
-  debug: 3
-});
-*/
-
 const CallComp: React.FC<Props> = ( {myStream, peer} ) => {
+
+  console.log("mystreeeem");
+  console.log(myStream);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -36,7 +32,14 @@ const CallComp: React.FC<Props> = ( {myStream, peer} ) => {
   // 受信処理
   peer.on('call', mediaConnection => {
     console.log("受信処理 in callComp");
-    console.log(mediaConnection);
+    
+    mediaConnection.answer(myStream);
+    mediaConnection.on('stream', stream => {
+      // video要素にカメラ映像をセットして再生
+      if (!theirVideoRef.current) return
+      theirVideoRef.current.srcObject = stream;
+      theirVideoRef.current.play();
+    });
   });
 
   return (
@@ -45,7 +48,8 @@ const CallComp: React.FC<Props> = ( {myStream, peer} ) => {
         <textarea id="their-id" ref={textAreaRef}></textarea>
         <button id="make-call" onClick={handleClick}>発信</button>
       </div>
-      <video ref={theirVideoRef}></video>
+      Their Video
+      <video id="theire-video" width="400px" ref={theirVideoRef} autoPlay muted playsInline></video>
     </div>
   )
 }

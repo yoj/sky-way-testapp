@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 import Peer from 'skyway-js';
 import VideoComp from './components/videoComp';
-import PeerComp from './components/peerComp';
 
 type Stream = {
   localStream: MediaStream;
@@ -17,11 +16,10 @@ const peer = new Peer({
 function App() {
 
   return (
+
     <div className="App">
       video
       <VideoComp peer={peer}/>
-      peerID
-      <PeerComp peer={peer} />
     </div>
   );
 }
