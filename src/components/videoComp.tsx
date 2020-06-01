@@ -10,6 +10,8 @@ const peer = new Peer({
   debug: 3
 });
 
+let localStream:(MediaStream | undefined) = undefined;
+
 const VideoComp: React.FC<Props> = ( {} ) => {
   const [myId, setMyId] = useState('');
   const [callId, setCallId] = useState('')
@@ -18,19 +20,19 @@ const VideoComp: React.FC<Props> = ( {} ) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  let localStream:(MediaStream | undefined) = undefined;
-
-  navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(strem => {
-    if (!videoRef.current) return; 
-    videoRef.current.srcObject = strem;
-    localStream = strem;
-  });
+  navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    .then( strem => {
+      if (!videoRef.current) return;
+      videoRef.current.srcObject = strem;
+      localStream = strem;
+    })
+    .catch( e => { console.log(e);});
 
   // PeerID 発番
   peer.on('open', () => {
     setMyId(peer.id);
   });
-  
+
   // 発信処理
   const handleClick = () => {
     const mediaConnection = peer.call(callId, localStream!);
@@ -42,7 +44,6 @@ const VideoComp: React.FC<Props> = ( {} ) => {
       await remoteVideoRef.current.play();
     });
   }
-
   // 受信処理
   peer.on('call', mediaConnection => {
     mediaConnection.answer(localStream);
@@ -50,6 +51,7 @@ const VideoComp: React.FC<Props> = ( {} ) => {
     mediaConnection.on('stream', async stream => {
       if (!remoteVideoRef.current) return
       remoteVideoRef.current.srcObject = stream;
+      //await remoteVideoRef.current.play();
     });
   });
 
