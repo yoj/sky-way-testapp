@@ -10,12 +10,9 @@ const PeerComp: React.FC<Props> = ( {peer} ) => {
 
   const [myId, setMyId] = useState('');
 
-  //useEffect(() => {
-  // PeerIDの取得
   peer.on('open', () => {
     setMyId(peer.id);
   });
-  //});
 
   return (
    <div>{myId}</div>

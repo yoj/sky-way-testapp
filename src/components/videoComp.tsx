@@ -6,7 +6,7 @@ type Props = {
 };
 
 const peer = new Peer({
-  key: '',
+  key: 'acbe9e88-dfd6-495a-8ab3-8aae221fe08e',
   debug: 3
 });
 
