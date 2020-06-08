@@ -22,8 +22,6 @@ const RoomComp: React.FC<Props> = ( {} ) => {
   const remoteVideoRef = useRef<HTMLDivElement>(null);
   const connetPeerRef = useRef<HTMLButtonElement>(null);
 
-  const testRef = useRef<HTMLVideoElement>(null);
-
   // ローカルのmediaStreamを取得する
   navigator.mediaDevices.getUserMedia({video: true, audio: true})
     .then( strem => {
@@ -59,7 +57,7 @@ const RoomComp: React.FC<Props> = ( {} ) => {
     room.on('stream', async stream => {
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
-     // testRef.current.playsInline = true;
+
       // mark peerId to find it later at peerLeave event
       newVideo.setAttribute('data-peer-id', stream.peerId);
       if (!remoteVideoRef.current) return; 
@@ -76,8 +74,6 @@ const RoomComp: React.FC<Props> = ( {} ) => {
         video
         <video id="my-video" width="400px" ref={videoRef} autoPlay muted playsInline></video>
       </div>
-      new Video
-      <video ref={testRef} muted playsInline></video>
       remote
       <div ref={remoteVideoRef} className="remote-streams" id="js-remote-streams"></div>
     </div>
