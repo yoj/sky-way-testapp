@@ -2,17 +2,14 @@ import React, {Component, useRef, useState} from 'react';
 import '../App.css';
 import Peer from 'skyway-js';
 
-type Props = {
-};
-
 const peer = new Peer({
-  key: '',
+  key: process.env.REACT_APP_API_KEY!,
   debug: 3
 });
 
 let localStream:(MediaStream | undefined) = undefined;
 
-const RoomComp: React.FC<Props> = ( {} ) => {
+const RoomComp: React.FC = ( {} ) => {
   //const [roomId, setRoomId] = useState(Math.random().toString(32).substring(2))
   const [roomId, setRoomId] = useState("ahd12lsmdl")
   const [callId, setCallId] = useState('')
@@ -59,8 +56,7 @@ const RoomComp: React.FC<Props> = ( {} ) => {
     room.on('stream', async stream => {
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
-     // testRef.current.playsInline = true;
-      // mark peerId to find it later at peerLeave event
+      
       newVideo.setAttribute('data-peer-id', stream.peerId);
       if (!remoteVideoRef.current) return; 
       remoteVideoRef.current.append(newVideo);
@@ -76,8 +72,6 @@ const RoomComp: React.FC<Props> = ( {} ) => {
         video
         <video id="my-video" width="400px" ref={videoRef} autoPlay muted playsInline></video>
       </div>
-      new Video
-      <video ref={testRef} muted playsInline></video>
       remote
       <div ref={remoteVideoRef} className="remote-streams" id="js-remote-streams"></div>
     </div>
