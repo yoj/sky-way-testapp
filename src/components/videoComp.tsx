@@ -6,7 +6,7 @@ type Props = {
 };
 
 const peer = new Peer({
-  key: 'acbe9e88-dfd6-495a-8ab3-8aae221fe08e',
+  key: process.env.REACT_APP_API_KEY!,
   debug: 3
 });
 
