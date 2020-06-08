@@ -1,6 +1,8 @@
 import React, {Component, useRef, useState} from 'react';
 import '../App.css';
 import Peer from 'skyway-js';
+import FormComp from './FormComp';
+import { RouteComponentProps } from 'react-router';
 
 const peer = new Peer({
   key: process.env.REACT_APP_API_KEY!,
@@ -9,9 +11,11 @@ const peer = new Peer({
 
 let localStream:(MediaStream | undefined) = undefined;
 
-const RoomComp: React.FC = ( {} ) => {
-  //const [roomId, setRoomId] = useState(Math.random().toString(32).substring(2))
-  const [roomId, setRoomId] = useState("ahd12lsmdl")
+type Props = {} & RouteComponentProps<{roomId: string}>;
+
+const RoomComp: React.FC<Props> = ( props ) => {
+  console.log(props.match.params.roomId);
+  const [roomId, setRoomId] = useState(props.match.params.roomId);
   const [callId, setCallId] = useState('')
 
   // useRefは明示的にvideoElmentを指定する
