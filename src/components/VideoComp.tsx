@@ -13,6 +13,7 @@ const peer = new Peer({
 let localStream:(MediaStream | undefined) = undefined;
 
 const VideoComp: React.FC<Props> = ( {} ) => {
+
   const [myId, setMyId] = useState('');
   const [callId, setCallId] = useState('')
 
@@ -56,21 +57,21 @@ const VideoComp: React.FC<Props> = ( {} ) => {
   });
 
   return (
-    <div>
-      <div>MyID : {myId}</div>
       <div>
-        video
-        <video id="my-video" width="400px" ref={videoRef} autoPlay muted playsInline></video>
+        <div>MyID : {myId}</div>
+        <div>
+          video
+          
+        </div>
+        <div>
+        <input value={callId} onChange={e => setCallId(e.target.value)}></input>
+          <button id="make-call" onClick={handleClick}>発信</button>
+        </div>
+        <div>
+          Their Video
+          <video id="remote-video" width="400px" ref={remoteVideoRef} autoPlay muted playsInline></video>
+        </div>
       </div>
-      <div>
-      <input value={callId} onChange={e => setCallId(e.target.value)}></input>
-        <button id="make-call" onClick={handleClick}>発信</button>
-      </div>
-      <div>
-        Their Video
-        <video id="remote-video" width="400px" ref={remoteVideoRef} autoPlay muted playsInline></video>
-      </div>
-    </div>
   );
 }
 

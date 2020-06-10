@@ -4,6 +4,34 @@ import Peer from 'skyway-js';
 import FormComp from './FormComp';
 import { RouteComponentProps } from 'react-router';
 
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Grid, { GridSpacing } from '@material-ui/core/Grid';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import Paper from '@material-ui/core/Paper';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+
+/** CSS */
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      height: 140,
+      width: 100,
+    },
+    control: {
+      padding: theme.spacing(2),
+    },
+  }),
+);
+/*******/
+
 const peer = new Peer({
   key: process.env.REACT_APP_API_KEY!,
   debug: 3
@@ -14,6 +42,9 @@ let localStream:(MediaStream | undefined) = undefined;
 type Props = {} & RouteComponentProps<{roomId: string}>;
 
 const RoomComp: React.FC<Props> = ( props ) => {
+
+  const [spacing, setSpacing] = React.useState<GridSpacing>(2);
+  const classes = useStyles();
 
   const [roomId, setRoomId] = useState(props.match.params.roomId);
   const [callId, setCallId] = useState('')
@@ -69,16 +100,21 @@ const RoomComp: React.FC<Props> = ( props ) => {
   }
 
   return (
-      <div>
-      <div>roomID : {roomId}</div>
-      <button ref={connetPeerRef} onClick={connectPeer}>peer on</button>
-      <div>
-        video
-        <video id="my-video" width="400px" ref={videoRef} autoPlay muted playsInline></video>
-      </div>
-      remote
-      <div ref={remoteVideoRef} className="remote-streams" id="js-remote-streams"></div>
-    </div>
+
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Grid container className={classes.root} spacing={2}>
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={spacing}>
+            <Grid>
+              <video id="my-video" width="400px" ref={videoRef} autoPlay muted playsInline></video>
+            </Grid>
+            <div ref={remoteVideoRef} className="remote-streams" id="js-remote-streams"></div>
+          </Grid>
+        </Grid>
+      </Grid>
+        <button ref={connetPeerRef} onClick={connectPeer}>peer on</button>
+    </Container>
   );
 }
 
