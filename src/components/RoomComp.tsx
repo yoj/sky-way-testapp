@@ -14,7 +14,7 @@ let localStream:(MediaStream | undefined) = undefined;
 type Props = {} & RouteComponentProps<{roomId: string}>;
 
 const RoomComp: React.FC<Props> = ( props ) => {
-  console.log(props.match.params.roomId);
+
   const [roomId, setRoomId] = useState(props.match.params.roomId);
   const [callId, setCallId] = useState('')
 
@@ -69,7 +69,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
   }
 
   return (
-    <div>
+      <div>
       <div>roomID : {roomId}</div>
       <button ref={connetPeerRef} onClick={connectPeer}>peer on</button>
       <div>
