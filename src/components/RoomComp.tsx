@@ -13,8 +13,9 @@ import Radio from '@material-ui/core/Radio';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Button from '@material-ui/core/Button';
+import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 
 /** CSS */
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     controller: {
       position: 'fixed',
-      left: 'calc(50% - 50px/2)',
+      left: 'calc(45% - 50px/2)',
       bottom: '50px',
       margin: theme.spacing(1)
     },
@@ -78,6 +79,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLDivElement>(null);
   const connetPeerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const gridRef = useRef<any>(null);
 
@@ -92,7 +94,8 @@ const RoomComp: React.FC<Props> = ( props ) => {
     })
     .catch( e => { console.log(e);});
 
-  
+
+  let test: any;
   const connectPeer = () => {
 
     if (!peer.on) {
@@ -105,21 +108,18 @@ const RoomComp: React.FC<Props> = ( props ) => {
       mode: 'sfu',
       stream: localStream,
     });
+    test = room;
 
-    room.once('open', () => {
-      console.log("=========== open =============");
-    });
+    room.once('open', () => {});
 
-    room.on('peerJoin', peerId => {
-      console.log(`=========== open ${peerId} =============`);
-      //memberPeerIds.push(peerId);
-    });
+    room.on('peerJoin', peerId => {});
 
     // Render remote stream for new peer join in the room
     room.on('stream', async stream => {
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
       newVideo.setAttribute('class', 'remote-videos' );
+      newVideo.setAttribute('id', 'remote-videos-peerid-' + stream.peerId );
       
       newVideo.setAttribute('data-peer-id', stream.peerId);
       if (!remoteVideoRef.current) return; 
@@ -128,20 +128,17 @@ const RoomComp: React.FC<Props> = ( props ) => {
 
 
       memberPeerCount = memberPeerCount + 1;
-      console.log("memberPeerCount = " + memberPeerCount);
       /** videoのサイズ調整 */
-      let sizefix = 0;
-      if (memberPeerCount == 0) {
-        sizefix = 1;
-      } else if (memberPeerCount <= 3) {
+      let sizefix = 1;
+      if (memberPeerCount <= 3 && memberPeerCount > 1) {
         sizefix = 2;
-      } else {
+      } else if (memberPeerCount > 3) {
         sizefix = 4;
       }
       let videoWidth = 100 / sizefix;
 
       let rvs: any = document.getElementsByClassName('remote-videos');
-      console.log(rvs);
+
       if (rvs.length != 0) {
         for (let item of rvs) {
           item.style.width = videoWidth + "%";
@@ -149,31 +146,31 @@ const RoomComp: React.FC<Props> = ( props ) => {
         }
       }
     });
+
+    /** Closeボタン */
+    closeRef.current?.addEventListener('click', () => {
+      room.close();
+    });
+
+    room.on('peerLeave', peerId => {
+      // peerIdの対象video elementを削除する
+      document.getElementById('remote-videos-peerid-' + peerId)?.remove();
+    });
   }
-
-  /** Grid内にvideoを追加する */
-  const createGridItemElement = ( newVideo: HTMLVideoElement ) => {
-    const newGrid = document.createElement('Grid');
-    newGrid.setAttribute('item', '');
-    newGrid.setAttribute('xs', '12');
-    newGrid.setAttribute('ms', '6');
-    newGrid.append(newVideo);
-
-    gridRef.current.append(newGrid);
-
-    newVideo.play().catch(console.error);
-
-  };
 
   return (
 
     <div className={classes.root}>
       <div ref={remoteVideoRef} className={classes.remoteStreams} id="js-remote-streams"></div>
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
-      <Button className={classes.controller} ref={connetPeerRef} onClick={connectPeer} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
-          Join Room
-      </Button>
-
+      <div className={classes.controller} >
+        <Button ref={connetPeerRef} onClick={connectPeer} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
+            Join Room
+        </Button>
+        <Button ref={closeRef} variant="contained" color="secondary" startIcon={<CancelIcon />}>
+            Left Room
+        </Button>
+      </div>
     </div>
   );
 }
