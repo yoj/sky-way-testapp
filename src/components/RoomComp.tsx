@@ -1,11 +1,10 @@
 import React, {Component, useRef, useState} from 'react';
 import '../App.css';
-import Peer from 'skyway-js';
-import FormComp from './FormComp';
+import Peer, { RoomStream } from 'skyway-js';
+import VideoPlacement from './video/PeerVideoComp';
 import { RouteComponentProps } from 'react-router';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Grid, { GridSpacing } from '@material-ui/core/Grid';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -27,11 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       backgroundColor: '#000000',
       display: 'table'
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
     },
     video: {
       width: '200px',
@@ -68,20 +62,18 @@ let localStream:(MediaStream | undefined) = undefined;
 type Props = {} & RouteComponentProps<{roomId: string}>;
 
 const RoomComp: React.FC<Props> = ( props ) => {
-
-  const [spacing, setSpacing] = React.useState<GridSpacing>(2);
   const classes = useStyles();
 
   const [roomId, setRoomId] = useState(props.match.params.roomId);
   const [callId, setCallId] = useState('');
+
+  const [peerVideos, setPeerVideos] = useState<RoomStream[]>([]);
 
   // useRefは明示的にvideoElmentを指定する
   const videoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLDivElement>(null);
   const connetPeerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-
-  const gridRef = useRef<any>(null);
 
   let memberPeerCount = 0;
 
@@ -94,8 +86,6 @@ const RoomComp: React.FC<Props> = ( props ) => {
     })
     .catch( e => { console.log(e);});
 
-
-  let test: any;
   const connectPeer = () => {
 
     if (!peer.on) {
@@ -108,7 +98,6 @@ const RoomComp: React.FC<Props> = ( props ) => {
       mode: 'sfu',
       stream: localStream,
     });
-    test = room;
 
     room.once('open', () => {});
 
@@ -116,6 +105,14 @@ const RoomComp: React.FC<Props> = ( props ) => {
 
     // Render remote stream for new peer join in the room
     room.on('stream', async stream => {
+
+      // stremを取得したタイミングで、stateを更新
+      let newPeerVideos = peerVideos;
+      newPeerVideos.push(stream);
+      setPeerVideos(newPeerVideos);
+      console.log(peerVideos);
+
+      /*
       const newVideo = document.createElement('video');
       newVideo.srcObject = stream;
       newVideo.setAttribute('class', 'remote-videos' );
@@ -128,7 +125,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
 
 
       memberPeerCount = memberPeerCount + 1;
-      /** videoのサイズ調整 */
+      // videoのサイズ調整
       let sizefix = 1;
       if (memberPeerCount <= 3 && memberPeerCount > 1) {
         sizefix = 2;
@@ -145,9 +142,10 @@ const RoomComp: React.FC<Props> = ( props ) => {
           item.style.height = videoWidth + "%";
         }
       }
+      */
     });
 
-    /** Closeボタン */
+    // Closeボタン
     closeRef.current?.addEventListener('click', () => {
       room.close();
     });
@@ -161,7 +159,10 @@ const RoomComp: React.FC<Props> = ( props ) => {
   return (
 
     <div className={classes.root}>
-      <div ref={remoteVideoRef} className={classes.remoteStreams} id="js-remote-streams"></div>
+      <VideoPlacement peerVideos={peerVideos} />
+      {/**
+        <div ref={remoteVideoRef} className={classes.remoteStreams} id="js-remote-streams"></div>
+      */}
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div className={classes.controller} >
         <Button ref={connetPeerRef} onClick={connectPeer} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
