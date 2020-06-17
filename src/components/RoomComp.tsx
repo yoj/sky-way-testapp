@@ -107,42 +107,9 @@ const RoomComp: React.FC<Props> = ( props ) => {
     room.on('stream', async stream => {
 
       // stremを取得したタイミングで、stateを更新
-      let newPeerVideos = peerVideos;
-      newPeerVideos.push(stream);
-      setPeerVideos(newPeerVideos);
-      console.log(peerVideos);
-
-      /*
-      const newVideo = document.createElement('video');
-      newVideo.srcObject = stream;
-      newVideo.setAttribute('class', 'remote-videos' );
-      newVideo.setAttribute('id', 'remote-videos-peerid-' + stream.peerId );
-      
-      newVideo.setAttribute('data-peer-id', stream.peerId);
-      if (!remoteVideoRef.current) return; 
-      remoteVideoRef.current.append(newVideo);
-      await newVideo.play().catch(console.error);
-
-
-      memberPeerCount = memberPeerCount + 1;
-      // videoのサイズ調整
-      let sizefix = 1;
-      if (memberPeerCount <= 3 && memberPeerCount > 1) {
-        sizefix = 2;
-      } else if (memberPeerCount > 3) {
-        sizefix = 4;
-      }
-      let videoWidth = 100 / sizefix;
-
-      let rvs: any = document.getElementsByClassName('remote-videos');
-
-      if (rvs.length != 0) {
-        for (let item of rvs) {
-          item.style.width = videoWidth + "%";
-          item.style.height = videoWidth + "%";
-        }
-      }
-      */
+      peerVideos.push(stream);
+      let tempNewPeerVideos = Object.assign([] , peerVideos);
+      setPeerVideos(tempNewPeerVideos);
     });
 
     // Closeボタン
