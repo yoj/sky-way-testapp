@@ -52,16 +52,20 @@ const VideoPlacement: React.FC<Props> = ( {peerVideos} ) => {
   const classes = useStyles();
   const remoteVideoRef = useRef<HTMLDivElement>(null);
 
-  console.log("child compornent !!!");
-  console.log(peerVideos);
+  //let memberPeerCount = 0;
 
+  //let peerIds: string[] = ['aaa'];
+  const [peerIds, setPeerIds] = useState<string[]>([]);
   let length = peerVideos.length;
-  console.log("placemente 1");
-  console.log(length);
+
   for(let i = 0; i < length; i++){
-    let stream = peerVideos[0];
-    console.log("placemente 2");
-    console.log(stream);
+    let stream = peerVideos[i];
+    if ( peerIds.includes(stream.peerId) == true ) {
+      continue;
+    } else {
+      peerIds.push(stream.peerId);
+      setPeerIds(peerIds);
+    }
 
     const newVideo = document.createElement('video');
     newVideo.srcObject = stream;
@@ -75,8 +79,8 @@ const VideoPlacement: React.FC<Props> = ( {peerVideos} ) => {
       newVideo.play().catch(console.error);
     }
   }
-/*
-  memberPeerCount = memberPeerCount + 1;
+
+  let memberPeerCount = peerIds.length;
   // videoのサイズ調整
   let sizefix = 1;
   if (memberPeerCount <= 3 && memberPeerCount > 1) {
@@ -90,11 +94,11 @@ const VideoPlacement: React.FC<Props> = ( {peerVideos} ) => {
 
   if (rvs.length != 0) {
     for (let item of rvs) {
-      item.style.width = videoWidth + "%";
+      //item.style.width = videoWidth + "%";
       item.style.height = videoWidth + "%";
     }
   }
-*/
+
   return (
     <div ref={remoteVideoRef} className={classes.remoteStreams} id="js-remote-streams"></div>
   );

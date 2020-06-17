@@ -75,8 +75,6 @@ const RoomComp: React.FC<Props> = ( props ) => {
   const connetPeerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  let memberPeerCount = 0;
-
   // ローカルのmediaStreamを取得する
   navigator.mediaDevices.getUserMedia({video: true, audio: true})
     .then( strem => {
@@ -127,9 +125,6 @@ const RoomComp: React.FC<Props> = ( props ) => {
 
     <div className={classes.root}>
       <VideoPlacement peerVideos={peerVideos} />
-      {/**
-        <div ref={remoteVideoRef} className={classes.remoteStreams} id="js-remote-streams"></div>
-      */}
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div className={classes.controller} >
         <Button ref={connetPeerRef} onClick={connectPeer} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
