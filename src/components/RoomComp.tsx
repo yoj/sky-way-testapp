@@ -5,13 +5,6 @@ import VideoPlacement from './video/PeerVideoComp';
 import { RouteComponentProps } from 'react-router';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Button from '@material-ui/core/Button';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -62,16 +55,13 @@ let localStream:(MediaStream | undefined) = undefined;
 type Props = {} & RouteComponentProps<{roomId: string}>;
 
 const RoomComp: React.FC<Props> = ( props ) => {
+
+  const roomId = props.match.params.roomId;
   const classes = useStyles();
-
-  const [roomId, setRoomId] = useState(props.match.params.roomId);
-  const [callId, setCallId] = useState('');
-
   const [peerVideos, setPeerVideos] = useState<RoomStream[]>([]);
 
   // useRefは明示的にvideoElmentを指定する
   const videoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLDivElement>(null);
   const connetPeerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 

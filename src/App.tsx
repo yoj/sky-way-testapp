@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import VideoComp from './components/VideoComp';
 import RoomComp from './components/RoomComp';
 import InputComp from './components/FormComp';
+import Login from './components/Login';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   return (
     <Router>
       <Switch>
+        <Route exact path="/login" component={Login} />
         <Route exact path="/1on1-video" component={VideoComp} />
         <Route exact path="/sfu-room/create-room" component={InputComp} />
         <Route exact path="/sfu-room/:roomId" component={RoomComp} />
