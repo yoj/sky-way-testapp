@@ -6,15 +6,13 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import MeetingRoomOutlinedIcon from '@material-ui/icons/MeetingRoomOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
+import { TransitionProps } from '@material-ui/core/transitions';
 
 /*** CSS ***/
 const useStyles = makeStyles((theme) => ({
@@ -38,54 +36,66 @@ const useStyles = makeStyles((theme) => ({
 }));
 /***********/
 
-type Props = {}
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-const FormComp: React.FC<Props> = ( props: any ) => {
+type Props = {
+  connectPeer: any
+}
+
+const FormComp: React.FC<Props> = ( props ) => {
 
   const classes = useStyles();
-
   const [roomId, setRoomId] = useState('');
+  const [open, setOpen] = React.useState(true);
 
-  const handlerTest = () => {
-      console.log(roomId);
-      props.history.push("/sfu-room/" + roomId);
+  const handlerCreateRoom = () => {
+      window.history.replaceState(null, '', roomId);
+      setOpen(false);
+      props.connectPeer(roomId);
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <MeetingRoomOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Create Room
-        </Typography>
+    <Dialog fullScreen open={open} TransitionComponent={Transition}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <MeetingRoomOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Create Room
+          </Typography>
 
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="RoomID"
-          name="roomId"
-          autoFocus
-          value={roomId}
-          onChange={e => setRoomId(e.target.value)} 
-        />
-        <Button
-          type="button"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          onClick={handlerTest}
-        >
-            Create
-          </Button>
-      </div>
-    </Container>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="RoomID"
+            name="roomId"
+            autoFocus
+            value={roomId}
+            onChange={e => setRoomId(e.target.value)} 
+          />
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handlerCreateRoom}
+          >
+              Create
+            </Button>
+        </div>
+      </Container>
+      </Dialog>
   );
 }
 

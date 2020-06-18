@@ -1,6 +1,7 @@
 import React, {Component, useRef, useState} from 'react';
 import '../App.css';
 import Peer, { RoomStream } from 'skyway-js';
+import Form from './FormComp';
 import VideoPlacement from './video/PeerVideoComp';
 import { RouteComponentProps } from 'react-router';
 
@@ -8,6 +9,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import CancelIcon from '@material-ui/icons/Cancel';
+
 
 
 /** CSS */
@@ -52,11 +54,13 @@ const peer = new Peer({
 
 let localStream:(MediaStream | undefined) = undefined;
 
-type Props = {} & RouteComponentProps<{roomId: string}>;
+//type Props = {} & RouteComponentProps<{roomId: string}>;
+type Props = {};
 
 const RoomComp: React.FC<Props> = ( props ) => {
 
-  const roomId = props.match.params.roomId;
+  //const roomId = props.match.params.roomId;
+  const [roomId, setRoomId] = useState('');
   const classes = useStyles();
   const [peerVideos, setPeerVideos] = useState<RoomStream[]>([]);
 
@@ -74,15 +78,15 @@ const RoomComp: React.FC<Props> = ( props ) => {
     })
     .catch( e => { console.log(e);});
 
-  const connectPeer = () => {
-
+  const connectPeer = (nowRoomId: string) => {
+    setRoomId(nowRoomId);
     if (!peer.on) {
       return;
     }
 
     // roomに参加する
     // modeは一旦sfu固定とする
-    const room = peer.joinRoom(roomId, {
+    const room = peer.joinRoom(nowRoomId, {
       mode: 'sfu',
       stream: localStream,
     });
@@ -111,15 +115,22 @@ const RoomComp: React.FC<Props> = ( props ) => {
     });
   }
 
+  const onEventCallBack = () => {
+    console.log("子から親にイベント通知");
+  }
+
   return (
 
     <div className={classes.root}>
+      <Form connectPeer={connectPeer} />
       <VideoPlacement peerVideos={peerVideos} />
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div className={classes.controller} >
-        <Button ref={connetPeerRef} onClick={connectPeer} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
+        {/*
+        <Button ref={connetPeerRef} onClick={() => connectPeer("a")} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
             Join Room
         </Button>
+        */}
         <Button ref={closeRef} variant="contained" color="secondary" startIcon={<CancelIcon />}>
             Left Room
         </Button>
