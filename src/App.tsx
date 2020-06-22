@@ -15,7 +15,6 @@ function App() {
       <Switch>
         <Route exact path="/" component={Login} />
         <Route exact path="/1on1-video" component={VideoComp} />
-        <Route exact path="/sfu-room/create-room" component={FormComp} /> 
         <Route exact path="/sfu-room/" component={RoomComp} />
         <Route component={NotFound} />
       </Switch>

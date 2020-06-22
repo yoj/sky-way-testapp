@@ -7,9 +7,10 @@ import { RouteComponentProps } from 'react-router';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import CancelIcon from '@material-ui/icons/Cancel';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 
 
 /** CSS */
@@ -42,6 +43,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     remoteVideos: {
       objectFit: 'contain'
+    },
+    showButton: {
+      display: 'block'
+    },
+    hideButton: {
+      display: 'none'
     }
   }),
 );
@@ -66,8 +73,11 @@ const RoomComp: React.FC<Props> = ( props ) => {
 
   // useRefは明示的にvideoElmentを指定する
   const videoRef = useRef<HTMLVideoElement>(null);
-  const connetPeerRef = useRef<HTMLButtonElement>(null);
+  const muteRef = useRef<HTMLButtonElement>(null);
+  const onRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+
+  let isMute = false;
 
   // ローカルのmediaStreamを取得する
   navigator.mediaDevices.getUserMedia({video: true, audio: true})
@@ -115,8 +125,19 @@ const RoomComp: React.FC<Props> = ( props ) => {
     });
   }
 
-  const onEventCallBack = () => {
-    console.log("子から親にイベント通知");
+  const muteMyVideo = () => {
+    if (!videoRef.current) return;
+    if (isMute) {
+      videoRef.current.removeAttribute('muted');
+      onRef.current!.setAttribute("style", 'display:none;')
+      muteRef.current!.setAttribute("style", 'display:inline-flex;');
+      isMute = false;
+    } else {
+      videoRef.current.setAttribute('muted', '');
+      onRef.current!.setAttribute("style", 'display:inline-flex;')
+      muteRef.current!.setAttribute("style", 'display:none;');
+      isMute = true;
+    }
   }
 
   return (
@@ -126,14 +147,16 @@ const RoomComp: React.FC<Props> = ( props ) => {
       <VideoPlacement peerVideos={peerVideos} />
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div className={classes.controller} >
-        {/*
-        <Button ref={connetPeerRef} onClick={() => connectPeer("a")} variant="contained" color="secondary" startIcon={<KeyboardVoiceIcon />}>
-            Join Room
+        <Button ref={muteRef} onClick={muteMyVideo} variant="contained" color="secondary" startIcon={<VolumeOffIcon />}>
+            Mute
         </Button>
-        */}
-        <Button ref={closeRef} variant="contained" color="secondary" startIcon={<CancelIcon />}>
-            Left Room
+        <Button ref={onRef} onClick={muteMyVideo} variant="contained" color="secondary" startIcon={<VolumeUpIcon />} style={{display:'none'}} >
+            On
         </Button>
+        <Button ref={closeRef} variant="contained" color="secondary" startIcon={<ExitToAppIcon />}>
+            Left
+        </Button>
+        <ExitToAppIcon />
       </div>
     </div>
   );

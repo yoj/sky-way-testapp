@@ -52,9 +52,6 @@ const VideoPlacement: React.FC<Props> = ( {peerVideos} ) => {
   const classes = useStyles();
   const remoteVideoRef = useRef<HTMLDivElement>(null);
 
-  //let memberPeerCount = 0;
-
-  //let peerIds: string[] = ['aaa'];
   const [peerIds, setPeerIds] = useState<string[]>([]);
   let length = peerVideos.length;
 
