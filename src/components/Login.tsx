@@ -17,17 +17,11 @@ const Signup:React.FC<Props> = (props: any) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  //useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      user && props.history.push("/sfu-room/create-room");
-    });
-  //}, []);
-
   // login 
   const login = async () => {
     await auth.signInWithEmailAndPassword(email, password)
       .then(result => {
-        props.history.push("/sfu-room/create-room");
+        props.history.push("/sfu-room/");
       })
       .catch(e => {
         alert("メールアドレスまたはパスワードが間違っています。");
