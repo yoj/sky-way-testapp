@@ -4,78 +4,61 @@ import firebase from '../config/firebase'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ReactDOM from 'react-dom'
 
-type Props = {}
-const Auth: React.FC<Props> = (props) => {
-  const [signinCheck, setSigninCheck] = useState(false)
-  const [signedIn, setSignedIn] = useState(false)
-  //const [fbUser, setFbUser] = useState<firebase.User|null>(null)
-  let fbUser: (firebase.User|null) = null
+class Auth extends React.Component {
+  state = {
+    signinCheck: false, //ログインチェックが完了してるか
+    signedIn: false, //ログインしてるか
+  }
 
-  let isMounted = false
+  _isMounted = false; //unmountを判断（エラー防止用）
 
-  console.log(Children)
-  useEffect(() => {
-    //isMounted = true
-    console.log("useEffect")
-    firebase.onAuthStateChanged(user=> {
-      if (user) {
-        // ログイン済
-        if (isMounted) {
-          /*let status = true
-          setSigninCheck(status)
-          setSignedIn(status)*/
+  componentDidMount = () => {
+    //mountされてる
+    this._isMounted = true;
 
-          console.log(user)
-          fbUser = user
-        }
-      } else {
-        // 未ログイン
-        let status = false
-        setSigninCheck(status)
-        status = true
-        setSignedIn(status)
-      }
-    })
-    // componentWillUnmountの代替
-    return () => {
-      console.log("unmaout")
-      isMounted = false
-    }
-  })
-
-  // ログインチェックが終わっていなかった場合
-  //if (!signinCheck) {
-    return (
-      <>
-      {(() => {
-        console.log(props.children)
-        if (!isMounted) {
-          console.log("その1")
-          return <CircularProgress />
-        }
-
-        if (fbUser != null) {
-          console.log("その2")
-          return props.children
+    //ログインしてるかどうかチェック
+    firebase.onAuthStateChanged(user => {
+        if (user) {
+            //してる
+            if (this._isMounted) {
+                this.setState({
+                    signinCheck: true,
+                    signedIn: true,
+                });
+            }
         } else {
-          console.log("その3")
-          return <Redirect to="/login/" />
+            //してない
+            if (this._isMounted) {
+                this.setState({
+                    signinCheck: true,
+                    signedIn: false,
+                });
+            }
         }
-      })()}
-      </>
-    )
-  //}
-  // ログインチェックが終わっていた場合
-  /*if (signedIn) {
-    console.log("sfuroomにリダイレクトするはず");
-    return (
-      <Redirect to="/sfu-room" />
-    )
-  } else {
-    return (
-      <Redirect to="/login/" />
-    )
-  }*/
+    })
+  }
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
+  }
+
+  render() {
+    //チェックが終わってないなら（ローディング表示）
+    if (!this.state.signinCheck) {
+        return (
+            <CircularProgress />
+        );
+    }
+
+    //チェックが終わりかつ
+    if (this.state.signedIn) {
+        //サインインしてるとき（そのまま表示）
+        return this.props.children;
+    } else {
+        //してないとき（ログイン画面にリダイレクト）
+        return <Redirect to="/login" />
+    }
+  }
 }
 
-export default Auth
+export default Auth;
