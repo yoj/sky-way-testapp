@@ -1,40 +1,38 @@
 import React, {useState, useEffect, Children} from 'react'
+import '../App.css'
 import { Redirect } from 'react-router-dom'
 import firebase from '../config/firebase'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import ReactDOM from 'react-dom'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+
 
 class Auth extends React.Component {
   state = {
-    signinCheck: false, //ログインチェックが完了してるか
-    signedIn: false, //ログインしてるか
+    signinCheck: false,
+    signedIn: false,
   }
 
-  _isMounted = false; //unmountを判断（エラー防止用）
+  _isMounted = false;
 
   componentDidMount = () => {
-    //mountされてる
     this._isMounted = true;
-
-    //ログインしてるかどうかチェック
     firebase.onAuthStateChanged(user => {
-        if (user) {
-            //してる
-            if (this._isMounted) {
-                this.setState({
-                    signinCheck: true,
-                    signedIn: true,
-                });
-            }
-        } else {
-            //してない
-            if (this._isMounted) {
-                this.setState({
-                    signinCheck: true,
-                    signedIn: false,
-                });
-            }
+      if (user) {
+        if (this._isMounted) {
+          this.setState({
+            signinCheck: true,
+            signedIn: true,
+          });
         }
+      } else {
+        if (this._isMounted) {
+          this.setState({
+            signinCheck: true,
+            signedIn: false,
+          });
+        }
+      }
     })
   }
 
@@ -45,18 +43,19 @@ class Auth extends React.Component {
   render() {
     //チェックが終わってないなら（ローディング表示）
     if (!this.state.signinCheck) {
-        return (
-            <CircularProgress />
-        );
+      return (
+        <div className="loading">
+          <LinearProgress />
+        </div>
+      );
     }
-
     //チェックが終わりかつ
     if (this.state.signedIn) {
-        //サインインしてるとき（そのまま表示）
-        return this.props.children;
+      //サインインしてるとき（そのまま表示）
+      return this.props.children;
     } else {
-        //してないとき（ログイン画面にリダイレクト）
-        return <Redirect to="/login" />
+      //してないとき（ログイン画面にリダイレクト）
+      return <Redirect to="/login" />
     }
   }
 }

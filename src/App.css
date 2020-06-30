@@ -42,3 +42,9 @@
     transform: rotate(360deg);
   }
 }
+
+.loading {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+}
