@@ -24,6 +24,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     video: {
       width: '200px',
+      height: '150px',
+      background: '#eee',
+      position: 'fixed',
+      right: '50px;',
+      bottom: '50px'
+    },
+    muteVideoFill: {
+      width: '200px',
+      height: '150px',
+      background: '#eee',
       position: 'fixed',
       right: '50px;',
       bottom: '50px'
@@ -76,7 +86,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
   const onRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  let isMute = false;
+  let isMute = false
 
   // ローカルのmediaStreamを取得する
   navigator.mediaDevices.getUserMedia({video: true, audio: true})
@@ -124,7 +134,8 @@ const RoomComp: React.FC<Props> = ( props ) => {
     });
   }
 
-  const muteMyVideo = () => {
+  /*
+  const muteMySound = () => {
     if (!videoRef.current) return;
     if (isMute) {
       videoRef.current.removeAttribute('muted');
@@ -137,6 +148,24 @@ const RoomComp: React.FC<Props> = ( props ) => {
       muteRef.current!.setAttribute("style", 'display:none;');
       isMute = true;
     }
+  }*/
+
+  const muteMyVideo = async () => {
+    if (isMute) {
+      localStream!.getAudioTracks().forEach(track => track.enabled = true)
+      localStream!.getVideoTracks().forEach(track => track.enabled = true)
+
+      onRef.current!.setAttribute("style", 'display:none;')
+      muteRef.current!.setAttribute("style", 'display:inline-flex;')
+      isMute = false
+    } else {
+      localStream!.getAudioTracks().forEach(track => track.enabled = false)
+      localStream!.getVideoTracks().forEach(track => track.enabled = false)
+
+      onRef.current!.setAttribute("style", 'display:inline-flex;')
+      muteRef.current!.setAttribute("style", 'display:none;')
+      isMute = true
+    }
   }
 
   return (
@@ -145,6 +174,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
       <Form connectPeer={connectPeer} />
       <VideoPlacement peerVideos={peerVideos} />
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
+      <div className={classes.muteVideoFill}></div>
       <div className={classes.controller} >
         <Button ref={muteRef} onClick={muteMyVideo} variant="contained" color="secondary" startIcon={<VolumeOffIcon />}>
             Mute
