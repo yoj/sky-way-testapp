@@ -4,6 +4,7 @@ import Peer, { RoomStream } from 'skyway-js';
 import Form from './FormComp';
 import VideoPlacement from './video/PeerVideoComp';
 import { RouteComponentProps } from 'react-router';
+import Logout from './Logout'
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -132,22 +133,6 @@ const RoomComp: React.FC<Props> = ( props ) => {
     });
   }
 
-  /*
-  const muteMySound = () => {
-    if (!videoRef.current) return;
-    if (isMute) {
-      videoRef.current.removeAttribute('muted');
-      onRef.current!.setAttribute("style", 'display:none;')
-      muteRef.current!.setAttribute("style", 'display:inline-flex;');
-      isMute = false;
-    } else {
-      videoRef.current.setAttribute('muted', '');
-      onRef.current!.setAttribute("style", 'display:inline-flex;')
-      muteRef.current!.setAttribute("style", 'display:none;');
-      isMute = true;
-    }
-  }*/
-
   const muteMyVideo = async () => {
     if (isMute) {
       localStream!.getAudioTracks().forEach(track => track.enabled = true)
@@ -169,23 +154,16 @@ const RoomComp: React.FC<Props> = ( props ) => {
   }
 
   return (
-
     <div className={classes.root}>
+      <Logout />
       <Form connectPeer={connectPeer} />
       <VideoPlacement peerVideos={peerVideos} />
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div ref={muteVideoFillRef} className={classes.muteVideoFill}></div>
       <div className={classes.controller} >
-        <Button ref={muteRef} onClick={muteMyVideo} variant="contained" color="secondary" startIcon={<VolumeOffIcon />}>
-            Mute
-        </Button>
-        <Button ref={onRef} onClick={muteMyVideo} variant="contained" color="secondary" startIcon={<VolumeUpIcon />} style={{display:'none'}} >
-            On
-        </Button>
-        <Button ref={closeRef} variant="contained" color="secondary" startIcon={<ExitToAppIcon />}>
-            Left
-        </Button>
-        <ExitToAppIcon />
+        <Button ref={muteRef} onClick={muteMyVideo} variant="contained" color="secondary" ><VolumeOffIcon /></Button>
+        <Button ref={onRef} onClick={muteMyVideo} variant="contained" color="secondary" style={{display:'none'}} ><VolumeUpIcon /></Button>
+        <Button ref={closeRef} variant="contained" color="secondary"><ExitToAppIcon /></Button>
       </div>
     </div>
   );

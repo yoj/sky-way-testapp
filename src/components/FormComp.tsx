@@ -95,7 +95,7 @@ const FormComp: React.FC<Props> = ( props ) => {
             </Button>
         </div>
       </Container>
-      </Dialog>
+    </Dialog>
   );
 }
 
