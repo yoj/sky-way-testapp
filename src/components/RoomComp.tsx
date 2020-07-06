@@ -3,7 +3,6 @@ import '../App.css';
 import Peer, { RoomStream } from 'skyway-js';
 import Form from './FormComp';
 import VideoPlacement from './video/PeerVideoComp';
-import { RouteComponentProps } from 'react-router';
 import Logout from './Logout'
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
