@@ -1,0 +1,19 @@
+name: Deploy to Firebase
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repos
+        uses: actions/checkout@v2
+      - name: Install Firebass-tools
+        run: yarn global add firebase-tools
+      - name: Create env file
+        run: echo "${{ secrets.ENV_PROD }}" > .env
+      - name: Install dependencies
+        run: yarn --network-timeout 100000
