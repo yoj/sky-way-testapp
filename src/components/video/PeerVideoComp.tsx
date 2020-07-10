@@ -1,6 +1,6 @@
-import React, {Component, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import '../../App.css';
-import Peer, { RoomStream } from 'skyway-js';
+import { RoomStream } from 'skyway-js';
 
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -57,7 +57,7 @@ const VideoPlacement: React.FC<Props> = ( {peerVideos} ) => {
 
   for(let i = 0; i < length; i++){
     let stream = peerVideos[i];
-    if ( peerIds.includes(stream.peerId) == true ) {
+    if ( peerIds.includes(stream.peerId) === true ) {
       continue;
     } else {
       peerIds.push(stream.peerId);
@@ -89,7 +89,7 @@ const VideoPlacement: React.FC<Props> = ( {peerVideos} ) => {
 
   let rvs: any = document.getElementsByClassName('remote-videos');
 
-  if (rvs.length != 0) {
+  if (rvs.length !== 0) {
     for (let item of rvs) {
       //item.style.width = videoWidth + "%";
       item.style.height = videoWidth + "%";

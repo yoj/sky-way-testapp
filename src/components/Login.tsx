@@ -1,12 +1,10 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {
   Button,
   Container,
   FormControl,
   Grid,
-  Link,
-  TextField,
-  Typography
+  TextField
 } from "@material-ui/core";
 
 import auth from '../config/firebase'

@@ -1,4 +1,4 @@
-import React, {Component, useRef, useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import '../App.css';
 import Peer from 'skyway-js';
 

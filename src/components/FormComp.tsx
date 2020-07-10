@@ -1,6 +1,5 @@
-import React, {Component, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import '../App.css';
-import { prependOnceListener } from 'cluster';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';

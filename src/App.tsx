@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import VideoComp from './components/VideoComp';
 import RoomComp from './components/RoomComp';
 import Login from './components/Login';
 import NotFound from './404';

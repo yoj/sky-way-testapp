@@ -1,4 +1,4 @@
-import React, {Component, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import '../App.css';
 import Peer, { RoomStream } from 'skyway-js';
 import Form from './FormComp';
@@ -73,7 +73,6 @@ let localStream:(MediaStream | undefined) = undefined
 type Props = {}
 
 const RoomComp: React.FC<Props> = ( props ) => {
-  const [roomId, setRoomId] = useState('')
   const classes = useStyles()
   const [peerVideos, setPeerVideos] = useState<RoomStream[]>([])
 
@@ -96,7 +95,6 @@ const RoomComp: React.FC<Props> = ( props ) => {
     .catch( e => { console.log(e);});
 
   const connectPeer = (nowRoomId: string) => {
-    setRoomId(nowRoomId);
     if (!peer.on) {
       return;
     }
