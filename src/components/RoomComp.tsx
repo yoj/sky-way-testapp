@@ -1,15 +1,15 @@
-import React, {useRef, useState} from 'react';
-import '../App.css';
-import Peer, { RoomStream } from 'skyway-js';
-import Form from './FormComp';
-import VideoPlacement from './video/PeerVideoComp';
+import React, {useRef, useState} from 'react'
+import '../App.css'
+import Peer, { RoomStream } from 'skyway-js'
+import VideoPlacement from './video/PeerVideoComp'
 import Logout from './Logout'
+import { RouteComponentProps } from 'react-router'
 
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import VolumeOffIcon from '@material-ui/icons/VolumeOff'
+import VolumeUpIcon from '@material-ui/icons/VolumeUp'
 
 
 /** CSS */
@@ -70,11 +70,13 @@ const peer = new Peer({
 })
 
 let localStream:(MediaStream | undefined) = undefined
-type Props = {}
+
+type Props = {} & RouteComponentProps<{roomId: string}>;
 
 const RoomComp: React.FC<Props> = ( props ) => {
   const classes = useStyles()
   const [peerVideos, setPeerVideos] = useState<RoomStream[]>([])
+  const [roomId, setRoomId] = useState(props.match.params.roomId)
 
   // useRefは明示的にvideoElmentを指定する
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -153,7 +155,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
   return (
     <div className={classes.root}>
       <Logout />
-      <Form connectPeer={connectPeer} />
+      {/** <Form connectPeer={connectPeer} /> **/}
       <VideoPlacement peerVideos={peerVideos} />
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div ref={muteVideoFillRef} className={classes.muteVideoFill}></div>

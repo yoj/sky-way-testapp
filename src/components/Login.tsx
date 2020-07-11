@@ -19,7 +19,7 @@ const Signup:React.FC<Props> = (props: any) => {
   const login = async () => {
     await auth.signInWithEmailAndPassword(email, password)
       .then(result => {
-        props.history.push("/sfu-room/");
+        props.history.push("/create-room/");
       })
       .catch(e => {
         alert("メールアドレスまたはパスワードが間違っています。");

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import '../App.css';
+import { Redirect } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -42,59 +43,55 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-type Props = {
-  connectPeer: any
-}
 
-const FormComp: React.FC<Props> = ( props ) => {
+type Props = {}
+
+const FormComp: React.FC<Props> = ( props: any ) => {
 
   const classes = useStyles();
   const [roomId, setRoomId] = useState('');
-  const [open, setOpen] = React.useState(true);
 
   const handlerCreateRoom = () => {
-      window.history.replaceState(null, '', roomId);
-      setOpen(false);
-      props.connectPeer(roomId);
+      window.history.replaceState(null, '', roomId)
+      let path = "/sfu-room/" + roomId
+      props.history.push(path)
   }
 
   return (
-    <Dialog fullScreen open={open} TransitionComponent={Transition}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <MeetingRoomOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Create Room
-          </Typography>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <MeetingRoomOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Create Room
+        </Typography>
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="RoomID"
-            name="roomId"
-            autoFocus
-            value={roomId}
-            onChange={e => setRoomId(e.target.value)} 
-          />
-          <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handlerCreateRoom}
-          >
-              Create
-            </Button>
-        </div>
-      </Container>
-    </Dialog>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="RoomID"
+          name="roomId"
+          autoFocus
+          value={roomId}
+          onChange={e => setRoomId(e.target.value)} 
+        />
+        <Button
+          type="button"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={handlerCreateRoom}
+        >
+            Create
+          </Button>
+      </div>
+    </Container>
   );
 }
 

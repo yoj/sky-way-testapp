@@ -25,18 +25,6 @@ type Props = {}
 const Signout:React.FC<Props> = (props: any) => {
   const classes = useStyles();
 
-  // login 
-  /*
-  const login = async () => {
-    await auth.signInWithEmailAndPassword(email, password)
-      .then(result => {
-        props.history.push("/sfu-room/");
-      })
-      .catch(e => {
-        alert("メールアドレスまたはパスワードが間違っています。");
-      })
-  }
-  */
   const logout = async () => {
     await auth.onAuthStateChanged( (user) => {
       auth.signOut().then( () => {
