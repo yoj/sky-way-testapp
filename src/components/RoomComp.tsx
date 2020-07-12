@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import VolumeOffIcon from '@material-ui/icons/VolumeOff'
 import VolumeUpIcon from '@material-ui/icons/VolumeUp'
+import CallIcon from '@material-ui/icons/Call'
 
 
 /** CSS */
@@ -71,12 +72,11 @@ const peer = new Peer({
 
 let localStream:(MediaStream | undefined) = undefined
 
-type Props = {} & RouteComponentProps<{roomId: string}>;
-
-const RoomComp: React.FC<Props> = ( props ) => {
+type Props = { } & RouteComponentProps<{roomId: string}>
+const RoomComp: React.FC<Props> = (props) => {
   const classes = useStyles()
   const [peerVideos, setPeerVideos] = useState<RoomStream[]>([])
-  const [roomId, setRoomId] = useState(props.match.params.roomId)
+  const roomId = props.match.params.roomId
 
   // useRefは明示的にvideoElmentを指定する
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -96,25 +96,28 @@ const RoomComp: React.FC<Props> = ( props ) => {
     })
     .catch( e => { console.log(e);});
 
-  const connectPeer = (nowRoomId: string) => {
-    if (!peer.on) {
-      return;
-    }
+  
+  let nowRoomId = roomId
+  if (!peer.on) {
+    alert("peerの接続が確認できません。再試行をしてください。")
+  }
 
+  const connectPeer = () => {
     // roomに参加する
     // modeは一旦sfu固定とする
     const room = peer.joinRoom(nowRoomId, {
       mode: 'sfu',
       stream: localStream,
     });
+    
+    room.once('open', () => {
+    });
 
-    room.once('open', () => {});
-
-    room.on('peerJoin', peerId => {});
+    room.on('peerJoin', peerId => {
+    });
 
     // Render remote stream for new peer join in the room
-    room.on('stream', async stream => {
-
+    room.on('stream', stream => {
       // stremを取得したタイミングで、stateを更新
       peerVideos.push(stream);
       let tempNewPeerVideos = Object.assign([] , peerVideos);
@@ -155,7 +158,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
   return (
     <div className={classes.root}>
       <Logout />
-      {/** <Form connectPeer={connectPeer} /> **/}
+      {/**<Form connectPeer={connectPeer} /> **/}
       <VideoPlacement peerVideos={peerVideos} />
       <video id="my-video" className={classes.video} ref={videoRef} autoPlay muted playsInline></video>
       <div ref={muteVideoFillRef} className={classes.muteVideoFill}></div>
@@ -163,6 +166,7 @@ const RoomComp: React.FC<Props> = ( props ) => {
         <Button ref={muteRef} onClick={muteMyVideo} variant="contained" color="secondary" ><VolumeOffIcon /></Button>
         <Button ref={onRef} onClick={muteMyVideo} variant="contained" color="secondary" style={{display:'none'}} ><VolumeUpIcon /></Button>
         <Button ref={closeRef} variant="contained" color="secondary"><ExitToAppIcon /></Button>
+        <Button onClick={connectPeer} variant="contained" color="secondary"><CallIcon /></Button>
       </div>
     </div>
   );

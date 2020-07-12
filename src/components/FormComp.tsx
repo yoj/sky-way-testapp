@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import '../App.css';
-import { Redirect } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -10,9 +9,6 @@ import MeetingRoomOutlinedIcon from '@material-ui/icons/MeetingRoomOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Dialog from '@material-ui/core/Dialog';
-import Slide from '@material-ui/core/Slide';
-import { TransitionProps } from '@material-ui/core/transitions';
 
 /*** CSS ***/
 const useStyles = makeStyles((theme) => ({
@@ -35,14 +31,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 /***********/
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 
 type Props = {}
 
